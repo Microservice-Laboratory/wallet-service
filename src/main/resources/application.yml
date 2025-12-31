@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: wallet
+
+  # Configurações de Jackson (JSON) para garantir o padrão UTC nas datas
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      write-date-timestamps-as-nanoseconds: false
+    time-zone: UTC
+
+  jpa:
+    open-in-view: false # Boa prática de performance: evita manter a conexão aberta na View
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          time_zone: UTC # Garante que o Hibernate trate as datas em UTC
