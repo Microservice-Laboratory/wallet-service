@@ -20,14 +20,22 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Build with Maven
+      - name: Build and Test with Maven
         run: mvn clean install -B
-
-      - name: Unit Tests Report
-        if: success() || failure()
-        run: echo "Testes finalizados com sucesso."
 
       - name: Verify Build Artifact
         run: |
           echo "Verificando artefato gerado..."
+          if [ ! -f target/*.jar ]; then
+            echo "ERRO: Artefato JAR não encontrado em target/"
+            exit 1
+          fi
           ls -lh target/*.jar
+
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wallet-service-jar
+          path: target/*.jar
+          if-no-files-found: error
+          retention-days: 1
