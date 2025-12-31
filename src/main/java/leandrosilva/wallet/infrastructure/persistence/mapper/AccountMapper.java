@@ -8,19 +8,10 @@ import leandrosilva.wallet.infrastructure.persistence.entity.AccountEntity;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
+    // Mapeamento direto e limpo
+    @Mapping(target = "user", ignore = true) // Vamos tratar o User no Repository/Service
+    AccountEntity toEntity(Account domain);
 
-    // Mapeia do Banco para o Domínio
-    // O MapStruct entende que entity.getUser().getId() deve ir para o userId do
-    // domínio
     @Mapping(source = "user.id", target = "userId")
     Account toDomain(AccountEntity entity);
-
-    // Mapeia do Domínio para o Banco
-    @Mapping(source = "userId", target = "user.id")
-    @Mapping(target = "user.fullName", ignore = true) // Ignoramos os outros campos do User
-    @Mapping(target = "user.documentNumber", ignore = true)
-    @Mapping(target = "user.email", ignore = true)
-    @Mapping(target = "user.status", ignore = true)
-    @Mapping(target = "user.createdAt", ignore = true)
-    AccountEntity toEntity(Account domain);
 }
