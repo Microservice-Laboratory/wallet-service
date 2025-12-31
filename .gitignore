@@ -1,0 +1,43 @@
+### Java & Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# Evita log de erros do Maven
+.metadata/
+
+### IDEs (VS Code, IntelliJ, Eclipse) ###
+.vscode/
+!.vscode/launch.json
+.settings/
+.classpath
+.project
+.factorypath
+bin/
+*.iml
+*.ipr
+*.iws
+.idea/
+
+### Docker & Local Env ###
+.env
+.env.local
+docker-compose.override.yml
+# Se você usa volumes locais para persistência de dados do DB
+pgdata/
+mysql_data/
+
+### Logs & Temp ###
+*.log
+logs/
+temp/
+tmp/
+
+### OS Specific ###
+.DS_Store
+Thumbs.db
