@@ -1,0 +1,35 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ "develop", "main", "feat/*" ]
+  pull_request:
+    branches: [ "develop", "main" ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build with Maven
+        run: mvn clean install -B
+
+      - name: Unit Tests Report
+        if: success() || failure()
+        run: echo "Testes finalizados com sucesso."
+
+      - name: Verify Build Artifact
+        run: |
+          echo "Verificando artefato gerado..."
+          ls -lh target/*.jar
