@@ -18,6 +18,9 @@ jobs:
       github.event_name != 'workflow_run' || 
       github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +30,7 @@ jobs:
         with:
           name: wallet-service-jar
           path: target/
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ github.event.workflow_run.id || ''}}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Log in to Azure Container Registry
