@@ -1,0 +1,46 @@
+name: Continuous Delivery
+
+on:
+  push:
+    branches: [ "develop", "main" ]
+  
+  workflow_dispatch:
+
+  workflow_run:
+    workflows: ["Continuous Integration"]
+    types:
+      - completed
+    branches: ["develop", "main"]
+
+jobs:
+  release-image:
+    if: ${{ github.event.workflow_run.conclusion == 'success'}}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download JAR from CI
+        uses: actions/download-artifact@v4
+        with:
+          name: wallet-service.jar
+          path: target/
+
+      - name: Log in to Azure Container Registry
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_CLIENT_ID }}
+          password: ${{ secrets.ACR_CLIENT_SECRET }}
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.ACR_LOGIN_SERVER }}/wallet-service:${{ github.sha }}
+            ${{ secrets.ACR_LOGIN_SERVER }}/wallet-service:latest
+
+      - name: Notify Infrastructure Repo
+        run: echo "Lógica para manipular o Helm"
