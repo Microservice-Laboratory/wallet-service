@@ -51,11 +51,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          driver: docker-container
-      
       - name: Download JAR from CI
         uses: actions/download-artifact@v4
         with:
@@ -77,8 +72,6 @@ jobs:
           tags: |
             ${{ secrets.ACR_LOGIN_SERVER }}/wallet-service:${{ github.sha }}
             ${{ github.ref_name == 'main' && format('{0}/wallet-service:latest', secrets.ACR_LOGIN_SERVER) || '' }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
       - name: Success Summary
         run: echo "Imagem ${{ github.sha }} publicada com sucesso no ACR."
