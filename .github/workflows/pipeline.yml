@@ -1,0 +1,74 @@
+name: Wallet Service - CI/CD pipeline
+
+on:
+  push:
+    branches: [ "develop", "main" ]
+  pull_request:
+    branches: [ "develop", "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Unit Tests and Compilation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build and Test with Maven
+        run: mvn clean install -B
+
+      - name: Upload JAR Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wallet-service-jar
+          path: target/*.jar
+          retention-days: 1
+
+  release-image:
+    name: Build and Push Docker Image
+    needs: build-and-test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download JAR from CI
+        uses: actions/download-artifact@v4
+        with:
+          name: wallet-service-jar
+          path: target/
+
+      - name: Log in to Azure Container Registry
+        uses: azure/docker-login@v2
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_CLIENT_ID }}
+          password: ${{ secrets.ACR_CLIENT_SECRET }}
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.ACR_LOGIN_SERVER }}/wallet-service:${{ github.event.workflow_run.head_sha || github.sha }}
+            ${{ secrets.ACR_LOGIN_SERVER }}/wallet-service:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Notify Infrastructure Repo
+        run: echo "Lógica para manipular o Helm"
