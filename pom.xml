@@ -5,8 +5,7 @@
 
     <groupId>com.wallet</groupId>
     <artifactId>wallet-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-
+    
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -87,6 +86,7 @@
     </dependencies>
 
     <build>
+        <finalName>wallet-service</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

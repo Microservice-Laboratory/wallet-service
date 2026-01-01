@@ -8,6 +8,9 @@ on:
 
   workflow_dispatch:
 
+env:
+  ARTIFACT_NAME: wallet-service
+
 jobs:
   build-and-test:
     name: Unit Tests and Compilation
@@ -31,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wallet-service-jar
-          path: target/*.jar
+          path: target/${{ env.ARTIFACT_NAME }}.jar
           retention-days: 1
 
   release-image:
@@ -46,6 +49,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
       - name: Download JAR from CI
         uses: actions/download-artifact@v4
         with:
@@ -65,10 +71,10 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.ACR_LOGIN_SERVER }}/wallet-service:${{ github.event.workflow_run.head_sha || github.sha }}
-            ${{ secrets.ACR_LOGIN_SERVER }}/wallet-service:latest
+            ${{ secrets.ACR_LOGIN_SERVER }}/wallet-service:${{ github.sha }}
+            ${{ github.ref_name == 'main' && format('{0}/wallet-service:latest', secrets.ACR_LOGIN_SERVER) || '' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Notify Infrastructure Repo
-        run: echo "Lógica para manipular o Helm"
+      - name: Success Summary
+        run: echo "Imagem ${{ github.sha }} publicada com sucesso no ACR."
