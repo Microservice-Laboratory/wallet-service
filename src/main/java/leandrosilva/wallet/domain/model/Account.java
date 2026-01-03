@@ -12,12 +12,13 @@ public class Account {
     private final UUID id;
     private final UUID userId;
     private BigDecimal balance;
-    private final String currency;
+    private ECurrency currency;
     private EAccountStatus status;
     private final Instant createdAt;
     private final Long version;
 
-    public Account(UUID id, UUID userId, BigDecimal balance, String currency, EAccountStatus status, Instant createdAt,
+    public Account(UUID id, UUID userId, BigDecimal balance, ECurrency currency, EAccountStatus status,
+            Instant createdAt,
             Long version) {
         this.id = id;
         this.userId = userId;
