@@ -29,7 +29,7 @@ public class AccountController {
     private final GetAccountByIdHandler getAccountByIdHandler;
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccountDto> getByDocument(@PathVariable UUID id) {
+    public ResponseEntity<AccountDto> getById(@PathVariable UUID id) {
         var query = new GetAccountByIdQuery(id);
         var response = getAccountByIdHandler.handle(query);
         return ResponseEntity.ok(response);
