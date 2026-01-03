@@ -27,7 +27,12 @@ CREATE TABLE accounts (
     CONSTRAINT fk_account_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE RESTRICT,
     CONSTRAINT ck_account_status CHECK (
         status in ('ACTIVE', 'BLOCKED', 'CLOSED')
-    )
+    ),
+    CONSTRAINT ck_account_currency CHECK (currency in ('BRL', 'USD'))
 );
 
 CREATE INDEX idx_accounts_user_id ON accounts (user_id);
+
+CREATE UNIQUE INDEX uk_account_current ON accounts (user_id, currency)
+WHERE
+    status = 'ACTIVE';
