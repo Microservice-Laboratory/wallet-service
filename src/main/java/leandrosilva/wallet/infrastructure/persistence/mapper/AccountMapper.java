@@ -8,8 +8,7 @@ import leandrosilva.wallet.infrastructure.persistence.entity.AccountEntity;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
-    // Mapeamento direto e limpo
-    @Mapping(target = "user", ignore = true) // Vamos tratar o User no Repository/Service
+    @Mapping(source = "userId", target = "user.id")
     AccountEntity toEntity(Account domain);
 
     @Mapping(source = "user.id", target = "userId")
