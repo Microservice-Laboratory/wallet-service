@@ -19,7 +19,10 @@
         <lombok.mapstruct.binding>0.2.0</lombok.mapstruct.binding>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
 
+        <sonar.projectKey>Microservice-Laboratory_wallet-service</sonar.projectKey>
         <sonar.organization>microservice-laboratory</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        
         <sonar.java.binaries>target/classes</sonar.java.binaries>
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <sonar.exclusions>**/dto/**,**/entity/**,**/enums/**</sonar.exclusions>
